@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>International Airlines - Dashboard</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="logo" onclick="dashboardController.goHome()">IA</div>
+            <span>International Airlines</span>
+        </div>
+        <div class="nav-menu">
+            <a href="#" onclick="dashboardController.showSection('dashboard')" class="nav-link active">Dashboard</a>
+            <a href="#" onclick="dashboardController.showSection('flights')" class="nav-link">Flight Management</a>
+            <a href="#" onclick="dashboardController.showSection('tickets')" class="nav-link">Ticket Pricing</a>
+            <a href="#" onclick="dashboardController.showSection('weather')" class="nav-link">Weather</a>
+            <a href="#" onclick="dashboardController.showSection('routes')" class="nav-link">Safe Routes</a>
+            <a href="#" onclick="dashboardController.showSection('performance')" class="nav-link">Performance</a>
+            <a href="#" onclick="dashboardController.showSection('profile')" class="nav-link">Profile</a>
+            <a href="#" onclick="dashboardController.showSection('activity')" class="nav-link">Login Activity</a>
+            <a href="#" onclick="authController.logout()" class="nav-link logout">Logout</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="content-section active">
+            <div class="dashboard-header">
+                <h1>Airport Management Dashboard</h1>
+                <p>Hazrat Shahjalal International Airport, Dhaka</p>
+                <button onclick="reportController.generateDailyReport()" class="btn-primary">Generate Daily Report</button>
+            </div>
+            
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <h3>Active Flights</h3>
+                    <div class="stat-number" id="activeFlights">Loading...</div>
+                </div>
+                <div class="dashboard-card">
+                    <h3>On-Time Performance</h3>
+                    <div class="stat-number" id="onTimePerf">Loading...</div>
+                </div>
+                <div class="dashboard-card">
+                    <h3>Total Passengers</h3>
+                    <div class="stat-number" id="totalPassengers">Loading...</div>
+                </div>
+                <div class="dashboard-card">
+                    <h3>Weather Status</h3>
+                    <div class="stat-text" id="weatherStatus">Loading...</div>
+                </div>
+            </div>
+            
+            <div class="recent-activities">
+                <h3>Recent Flight Activities</h3>
+                <div id="recentFlights" class="activity-list">
+                    <div class="loading">Loading recent flights...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Flight Management Section -->
+        <section id="flights" class="content-section">
+            <div class="section-header">
+                <h2>Flight Management System</h2>
+                <button onclick="flightController.showAddFlightModal()" class="btn-primary">Add New Flight</button>
+            </div>
+            
+            <div class="flights-container">
+                <div class="flights-filters">
+                    <input type="text" id="flightSearch" placeholder="Search flights..." onkeyup="flightController.searchFlights()">
+                    <select id="statusFilter" onchange="flightController.filterFlights()">
+                        <option value="">All Status</option>
+                        <option value="Scheduled">Scheduled</option>
+                        <option value="On Time">On Time</option>
+                        <option value="Delayed">Delayed</option>
+                        <option value="Cancelled">Cancelled</option>
+                        <option value="Boarding">Boarding</option>
+                        <option value="Departed">Departed</option>
+                    </select>
+                </div>
+                
+                <div class="flights-table-container">
+                    <table class="flights-table">
+                        <thead>
+                            <tr>
+                                <th>Flight No.</th>
+                                <th>Aircraft</th>
+                                <th>Route</th>
+                                <th>Departure</th>
+                                <th>Platform</th>
+                                <th>Status</th>
+                                <th>Passengers</th>
+                                <th>Fuel</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="flightsTableBody">
+                            <tr>
+                                <td colspan="9" class="loading">Loading flights...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="pagination" id="flightsPagination"></div>
+            </div>
+        </section>
+
+        <!-- Ticket Pricing Section -->
+        <section id="tickets" class="content-section">
+            <div class="section-header">
+                <h2>Ticket Pricing Management</h2>
+            </div>
+            <div id="ticketPricing" class="pricing-container">
+                <div class="loading">Loading ticket pricing...</div>
+            </div>
+        </section>
+
+        <!-- Weather Section -->
+        <section id="weather" class="content-section">
+            <div class="section-header">
+                <h2>Live Weather Display</h2>
+            </div>
+            <div class="weather-container">
+                <div class="weather-card main-weather">
+                    <h3>Dhaka, Bangladesh</h3>
+                    <div id="dhakaWeather" class="weather-info">
+                        <div class="weather-temp">Loading...</div>
+                        <div class="weather-desc">Loading...</div>
+                        <div class="weather-details">
+                            <span>Humidity: <span id="humidity">-</span>%</span>
+                            <span>Wind: <span id="windSpeed">-</span> km/h</span>
+                            <span>Visibility: <span id="visibility">-</span> km</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="weather-search">
+                    <input type="text" id="citySearch" placeholder="Search city weather...">
+                    <button onclick="weatherController.searchCityWeather()" class="btn-primary">Search</button>
+                </div>
+                
+                <div id="searchWeatherResult" class="weather-card hidden"></div>
+            </div>
+        </section>
+
+        <!-- Safe Routes Section -->
+        <section id="routes" class="content-section">
+            <div class="section-header">
+                <h2>🤖 AI-Powered Safe Route Analysis</h2>
+            </div>
+            <div class="routes-container">
+                <div class="route-input">
+                    <input type="text" id="routeOrigin" placeholder="Origin City (e.g., Dhaka)">
+                    <input type="text" id="routeDestination" placeholder="Destination City (e.g., Dubai)">
+                    <button onclick="window.aiController.analyzeRoute()" class="btn-primary ai-analyze-btn">🤖 AI Analyze Route</button>
+                </div>
+                
+                <div class="ai-features-grid">
+                    <div class="ai-feature-card" onclick="window.aiController.analyzePricing()">
+                        <h4>💰 Dynamic Pricing</h4>
+                        <p>AI-powered pricing optimization based on market demand, competition, and historical data</p>
+                    </div>
+                    
+                    <div class="ai-feature-card" onclick="window.aiController.predictDelay('IA123')">
+                        <h4>⏱️ Delay Prediction</h4>
+                        <p>Predict flight delays using weather, traffic, and historical pattern analysis</p>
+                    </div>
+                    
+                    <div class="ai-feature-card" onclick="window.aiController.optimizePassengerFlow()">
+                        <h4>🚶 Passenger Flow</h4>
+                        <p>Optimize terminal operations and reduce passenger wait times</p>
+                    </div>
+                    
+                    <div class="ai-feature-card" onclick="window.aiController.predictMaintenance()">
+                        <h4>🔧 Maintenance AI</h4>
+                        <p>Predictive maintenance using aircraft usage patterns and component analysis</p>
+                    </div>
+                </div>
+                
+                <div id="routeAnalysis" class="route-analysis hidden">
+                    <!-- AI analysis results will appear here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile Section -->
+        <section id="profile" class="content-section">
+            <div class="section-header">
+                <h2>Admin Profile Settings</h2>
+            </div>
+            <div class="profile-container">
+                <form id="profileForm" class="profile-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <input type="text" id="profileFirstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <input type="text" id="profileLastName" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="profileEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Date of Birth</label>
+                        <input type="date" id="profileDOB" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Update Profile</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Login Activity Section -->
+        <section id="activity" class="content-section">
+            <div class="section-header">
+                <h2>Login Activity Log</h2>
+            </div>
+            <div class="activity-container">
+                <table class="activity-table">
+                    <thead>
+                        <tr>
+                            <th>Date & Time</th>
+                            <th>User</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>IP Address</th>
+                        </tr>
+                    </thead>
+                    <tbody id="activityTableBody">
+                        <tr>
+                            <td colspan="5" class="loading">Loading login activity...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Add Flight Modal -->
+    <div id="addFlightModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Flight</h3>
+                <span class="close" onclick="flightController.closeModal('addFlightModal')">&times;</span>
+            </div>
+            <form id="addFlightForm" class="modal-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Flight Number</label>
+                        <input type="text" id="flightNumber" placeholder="e.g., IA123" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Aircraft</label>
+                        <select id="aircraft" required>
+                            <option value="">Select Aircraft</option>
+                            <option value="Boeing 737">Boeing 737</option>
+                            <option value="Boeing 777">Boeing 777</option>
+                            <option value="Boeing 787">Boeing 787</option>
+                            <option value="Airbus A320">Airbus A320</option>
+                            <option value="Airbus A330">Airbus A330</option>
+                            <option value="Airbus A350">Airbus A350</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Origin</label>
+                        <input type="text" id="origin" placeholder="e.g., Dhaka" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Destination</label>
+                        <input type="text" id="destination" placeholder="e.g., Dubai" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Departure Time</label>
+                        <input type="datetime-local" id="departureTime" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Arrival Time</label>
+                        <input type="datetime-local" id="arrivalTime" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Platform</label>
+                        <input type="text" id="platform" placeholder="e.g., A1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Total Passengers</label>
+                        <input type="number" id="totalPassengers" min="1" max="500" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">Add Flight</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../assets/js/config.js"></script>
+    <script src="../assets/js/utils/api.js"></script>
+    <script src="../assets/js/utils/storage.js"></script>
+    <script src="../assets/js/utils/validation.js"></script>
+    <script src="../assets/js/controllers/authController.js"></script>
+    <script src="../assets/js/controllers/dashboardController.js"></script>
+    <script src="../assets/js/controllers/flightController.js"></script>
+    <script src="../assets/js/controllers/weatherController.js"></script>
+    <script src="../assets/js/controllers/reportController.js"></script>
+    <script src="../assets/js/controllers/aiController.js"></script>
+    <script>
+        // Initialize dashboard when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            dashboardController.init();
+        });
+    </script>
+</body>
+</html>

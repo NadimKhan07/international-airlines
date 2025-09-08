@@ -1,0 +1,14 @@
+{
+  "name": "international-airlines-frontend",
+  "version": "1.0.0",
+  "description": "Airport Management System Frontend",
+  "main": "index.js",
+  "scripts": {
+    "start": "live-server --port=3000 --host=localhost",
+    "dev": "live-server --port=3000 --host=localhost --watch=.",
+    "build": "echo 'No build process needed for vanilla HTML/CSS/JS'"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}

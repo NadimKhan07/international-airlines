@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>International Airlines - Admin Login</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
+</head>
+<body class="login-body">
+    <div class="login-container">
+        <div class="logo-container">
+            <div class="logo" onclick="reloadPage()">IA</div>
+            <h1>International Airlines</h1>
+            <p>Admin Portal - Dhaka Airport</p>
+        </div>
+        
+        <div class="login-form-container">
+            <div class="form-tabs">
+                <button class="tab-btn active" onclick="authController.showLogin()">Login</button>
+                <button class="tab-btn" onclick="authController.showRegister()">Register</button>
+            </div>
+            
+            <!-- Login Form -->
+            <form id="loginForm" class="auth-form">
+                <h2>Admin Login</h2>
+                <div class="form-group">
+                    <input type="email" id="loginEmail" placeholder="Email Address" required>
+                    <span class="form-error" id="loginEmailError"></span>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                    <span class="form-error" id="loginPasswordError"></span>
+                </div>
+                <button type="submit" class="btn-primary" id="loginBtn">
+                    <span class="btn-text">Login</span>
+                    <span class="btn-loader hidden">Logging in...</span>
+                </button>
+                <a href="#" class="forgot-password" onclick="authController.showForgotPassword()">Forgot Password?</a>
+            </form>
+            
+            <!-- Register Form -->
+            <form id="registerForm" class="auth-form hidden">
+                <h2>Create Admin Account</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="text" id="firstName" placeholder="First Name" required>
+                        <span class="form-error" id="firstNameError"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="lastName" placeholder="Last Name" required>
+                        <span class="form-error" id="lastNameError"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="registerEmail" placeholder="Email Address" required>
+                    <span class="form-error" id="registerEmailError"></span>
+                </div>
+                <div class="form-group">
+                    <input type="date" id="dateOfBirth" required>
+                    <label for="dateOfBirth">Date of Birth</label>
+                    <span class="form-error" id="dateOfBirthError"></span>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="registerPassword" placeholder="Password (min 6 characters)" required>
+                    <span class="form-error" id="registerPasswordError"></span>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+                    <span class="form-error" id="confirmPasswordError"></span>
+                </div>
+                <button type="submit" class="btn-primary" id="registerBtn">
+                    <span class="btn-text">Create Account</span>
+                    <span class="btn-loader hidden">Creating Account...</span>
+                </button>
+            </form>
+        </div>
+        
+        <div id="messageContainer" class="message-container"></div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="../assets/js/config.js"></script>
+    <script src="../assets/js/utils/api.js"></script>
+    <script src="../assets/js/utils/storage.js"></script>
+    <script src="../assets/js/utils/validation.js"></script>
+    <script src="../assets/js/controllers/authController.js"></script>
+    <script>
+        // Initialize auth controller when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            authController.init();
+        });
+    </script>
+</body>
+</html>
